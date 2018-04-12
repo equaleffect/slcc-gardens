@@ -1,0 +1,71 @@
+CREATE TABLE UserPermissions (
+UserPermissionKey INT(11) NOT NULL AUTO_INCREMENT,
+Role VARCHAR(255) NOT NULL,
+RoleAccess VARCHAR(255) NOT NULL,
+PRIMARY KEY (UserPermissionKey));
+
+CREATE TABLE Users (
+UserKey INT(11) NOT NULL AUTO_INCREMENT,
+UserPermissionKey INT(11) NOT NULL,
+UserName VARCHAR(255) NOT NULL,
+Email VARCHAR(255) NOT NULL,
+Password VARCHAR(255) NOT NULL,
+PhoneNumber VARCHAR(255) NULL,
+CreatedDate DATETIME NOT NULL,
+LastModifiedDate DATETIME NULL,
+ArchivedDate DATETIME NULL,
+PRIMARY KEY (UserKey),
+INDEX UserToUserPermissions_idx (UserPermissionKey ASC),
+CONSTRAINT UserToUserPermissions
+FOREIGN KEY (UserPermissionKey)
+REFERENCES UserPermissions (UserPermissionKey)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION);
+
+CREATE TABLE Images (
+ImageKey INT(11) NOT NULL AUTO_INCREMENT,
+FileName VARCHAR(255) NOT NULL,
+UploadDate DATETIME NOT NULL,
+PRIMARY KEY (ImageKey));
+
+CREATE TABLE Bulletins (
+BulletinKey INT(11) NOT NULL AUTO_INCREMENT,
+UserKey INT(11) NOT NULL,
+Title VARCHAR(255) NOT NULL,
+Description VARCHAR(255) NOT NULL,
+CreatedDate DATETIME NOT NULL,
+ExpirationDate DATETIME NOT NULL,
+LastModifiedDate DATETIME NULL,
+ArchivedDate DATETIME NULL,
+PRIMARY KEY (BulletinKey),
+INDEX BulletinToUsers_idx (UserKey ASC),
+CONSTRAINT BulletinToUsers
+FOREIGN KEY (UserKey)
+REFERENCES Users (UserKey)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION);
+
+CREATE TABLE ImageToBulletins (
+ImageToBulletinKey INT(11) NOT NULL AUTO_INCREMENT,
+BulletinKey INT(11) NOT NULL,
+ImageKey INT(11) NOT NULL,
+PRIMARY KEY (ImageToBulletinKey),
+INDEX BulletinID_idx (BulletinKey ASC),
+INDEX ImageID_idx (ImageKey ASC),
+CONSTRAINT BulletinKey
+FOREIGN KEY (BulletinKey)
+REFERENCES Bulletins (BulletinKey)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION,
+CONSTRAINT ImageKey
+FOREIGN KEY (ImageKey)
+REFERENCES Images (ImageKey)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION);  
+  
+CREATE TABLE ErrorLogs (
+ErrorLogKey INT(11) NOT NULL AUTO_INCREMENT,
+Title VARCHAR(255) NOT NULL,
+Message VARCHAR(255) NOT NULL,
+TimeStamp DATETIME NOT NULL,
+PRIMARY KEY (ErrorLogKey));
