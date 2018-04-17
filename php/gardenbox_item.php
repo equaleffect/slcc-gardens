@@ -22,7 +22,7 @@ require_once "SLCCGAuthenticate.php";
       <a href="classifieds_landing.php">Classifieds</a> 
       | <a href="gardenbox_landing.php">Garden Box Logs</a> 
       | <a href="manage_members.php">Manage Members</a> 
-      | <a href="index.php">Back to Main Site</a> 
+      | <a href="../index.html">Back to Main Site</a>
     </nav>
 
   <div id="vitals">
