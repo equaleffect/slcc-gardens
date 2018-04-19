@@ -1,0 +1,397 @@
+:root{
+    --container-bg-color: #333;
+    --left-bg-color: rgba(0,128,0,0.4);
+    --left-button-hover-color: rgba(0,100,11,0.7);
+    --right-bg-color: rgba(43,43,43,0.7);
+    --right-button-hover-color: rgba(92,92,92,0.7);
+    --hover-width: 75%;
+    --other-width: 25%;
+    --speed: 1000ms;
+}
+
+html, body {
+    padding:0;
+    margin: 0;
+    font-family: "Franklin Gothic Medium",'Arial Narrow',Arial,sans-serif;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+h1 {
+    font-size: 4rem;
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+ul {
+    list-style: none;
+}
+
+.btn-link {
+    display: block;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    height: 2.5rem;
+    padding-top: 1.3rem;
+    width: 15rem;
+    text-align: center;
+    color: #fff;
+    border: #fff solid 0.2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.split.left .btn-link:hover {
+    background-color: var(--left-button-hover-color);
+    border-color: var(--left-button-hover-color);
+}
+
+.split.right .btn-link:hover {
+    background-color: var(--right-button-hover-color);
+    border-color: var(--right-button-hover-color);
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--container-bg-color);
+}
+
+.split {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.split.left {
+    left: 0;
+    background: url('../img/garden-box.jpg') center center no-repeat;
+    background-size: cover;
+}
+
+.split.right {
+    right: 0;
+    background: url("../img/garden-basket.jpeg") center center no-repeat;
+    background-size: cover;
+}
+
+.split.left:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: var(--left-bg-color);
+}
+
+.split.right:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: var(--right-bg-color);
+}
+
+.split.left, .split.left:before, .split.right, .split.right:before {
+    -webkit-transition: var(--speed) all ease-in-out;
+    -moz-transition:  var(--speed) all ease-in-out;
+    -ms-transition:  var(--speed) all ease-in-out;
+    -o-transition:  var(--speed) all ease-in-out;
+    transition:  var(--speed) all ease-in-out;
+}
+
+.hover-left .left {
+    width: var(--hover-width);
+}
+
+.hover-left .right {
+    width: var(--other-width);
+}
+
+.hover-left .right:before {
+    z-index: 4;
+}
+
+.hover-right .right {
+    width: var(--hover-width);
+}
+
+.hover-right .left {
+    width: var(--other-width);
+}
+
+.hover-right .left:before {
+    z-index: 4;
+}
+
+/*top navbar styles*/
+.navbar {
+    z-index: 2;
+    overflow: hidden;
+    height: 63px;
+    background-color: rgb(40,40,40);
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: ghostwhite;
+    text-align: center;
+    padding: 14px 16px;
+    font-size: 17px;
+    text-decoration: none;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 8px 0 0 0;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: #000;
+}
+
+/*small screen menu styles*/
+.open-slide {
+    display: none;
+}
+
+.side-nav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background-color: #111;
+    opacity: 0.9;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition:  0.5s;
+}
+
+.side-nav a {
+    padding: 10px 10px 10px 30px;
+    text-decoration: none;
+    font-size: 22px;
+    color: ghostwhite;
+    display: block;
+    transition: 0.3s;
+}
+
+.side-nav a:hover{
+    color: #666;
+}
+
+.side-nav .btn-close {
+    position: absolute;
+    top: 0;
+    right: 22px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+/*end small screen menu styles*/
+/*end top navbar*/
+
+/*modal styles*/
+#login-error{
+    margin: 4px;
+    width: 100%;
+}
+
+.btn {
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 10px;
+    margin: 4px;
+    padding: 6px;
+    border: none;
+    color: #ffffff;
+}
+
+.btn-primary {
+    background: #0044ff;
+}
+
+.btn-default {
+    background: #269abc;
+}
+
+.btn-secondary {
+    background-color: #3c763d;
+}
+
+.btn:hover{
+    background-color: #080808;
+    color: whitesmoke;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 3; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 30%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    position: relative;
+    float: left;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+    background-color: var(--container-bg-color);
+    color: white;
+    text-align: center;
+}
+
+.modal-body {
+    padding: 0;
+    margin: 0;
+    border: none;
+    position: relative;
+    float: left;
+    width: 100%;
+    background-color: #fefefe;
+}
+
+.modal-body label, .modal-body input {
+    position: relative;
+    float: left;
+    margin: 6px;
+    padding: 2px 0;
+    width: 95%;
+}
+
+.modal-footer {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: var(--container-bg-color);
+    color: white;
+}
+
+.modal-btn-group {
+    margin: 0;
+    padding: 0;
+}
+
+.modal-btn-item > button, .modal-btn-item > input {
+    position: relative;
+    float: left;
+    padding: 14px;
+}
+
+.modal-btn-item-right > button, .modal-btn-item-right > input {
+    position: relative;
+    float: right;
+    padding: 14px;
+}
+
+.modal-btn-item {
+    display: block;
+}
+
+.error {
+    display: none;
+    color: red;
+    font-weight: bold;
+}
+/*end login styles*/
+
+@media(max-width: 568px) {
+    h1 {
+        font-size:2rem;
+    }
+
+    .btn-link {
+        width: 12rem;
+    }
+
+    .modal-content {
+        width: 100%;
+    }
+
+    .nav-user {
+        display: none;
+    }
+
+    .open-slide {
+        display: block;
+    }
+}
+
+@media(max-height: 500px) {
+    .btn-link {
+        top: 60%;
+    }
+
+    body {
+        overflow-y: scroll;
+    }
+}
