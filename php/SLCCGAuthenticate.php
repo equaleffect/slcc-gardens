@@ -1,5 +1,6 @@
 <?php
 require_once("slccgutilities.php");
+
 /*
 AuthMode is a variable that can be defined prior to the include
 
@@ -299,10 +300,8 @@ return $rv;
 
 
 function getMysqliConnection(&$errmsg){
-$mysqlun = "isaac";
-$mysqlpw = "vk8y4uBu5Pgu";
-$dbhost = "localhost";
-$dbname = "SLCCGardens";
+require_once("dbconfig.php");
+
 
 // make database connection
 $dbcxn = new mysqli($dbhost, $mysqlun, $mysqlpw, $dbname);

@@ -1396,7 +1396,7 @@ var rv = false;
 // returnText is populated from Census view (and a few augmented
 // elements)
 var t = xreq.responseText;
-// alert("This is responseText: " + t);
+alert("This is responseText: " + t);
 
 if(!t){
   alert("Error 18. The edit could not be completed because of " + 
