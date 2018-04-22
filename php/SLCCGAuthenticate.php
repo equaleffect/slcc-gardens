@@ -1,7 +1,7 @@
 <?php
+require_once("slccgutilities.php");
 /*
 AuthMode is a variable that can be defined prior to the include
-for AdobeAuthenticate that can modify AdobeAuthenticate behavior:
 
 $AuthMode = 0: Regular behavior. If authentication fails, a 
                login form is shown. (Also applies if $AuthMode 
@@ -31,6 +31,12 @@ if(!empty($_GET)){
 $tf = session_start();
 $dbcxn = null;
 
+// branch for an AJAX call. ajaxAuth returns a JSON string to the
+// calling fcn.  It contains an error message ("failmess") on error 
+// or db row on success.
+if(!empty($_POST['AJAXAuth']) && $_POST['AJAXAuth'] == "AJAXAuth"){
+  ajaxAuth();}
+
 // save the outer PHP filename (not this include) for use in the 
 // login form
 $protectedPage = $_SERVER['PHP_SELF'];  
@@ -39,9 +45,6 @@ $protectedPage = $_SERVER['PHP_SELF'];
 // empty, authentication passed. If it is populated (and AuthMode is 
 // empty) then the login form is shown, inclding $msg
 $msg = authenticate();
-
-// if there is no error message, then authentication passed. Return
-// from the include and continue to the originally requested page
 if(empty($msg)){return;}
 
 
@@ -99,8 +102,8 @@ return $msg;}
 // clear session & post JIC
 clearSessionPermissions();
 
-$msg = validateUsernameAndPassword($unpw, $dbcxn);
-if(!empty($msg)){return $msg;}
+$tf = validateUsernameAndPassword($unpw, $msg, $dbcxn);
+if(empty($tf)){return $msg;}
 }  // end fcn authenticateUser
 
 
@@ -132,40 +135,42 @@ return $rv;
 }  // end fcn resolveUsernameAndPassword
 
 
-function validateUsernameAndPassword($unpw, $dbcxn){
+function validateUsernameAndPassword($unpw, &$msg, $dbcxn){
 // $unpw is 3 ele array: 0un, 1PlainTextPw (posted), 2saltedHash
+// returns true on successful login ($msg contains db row)
+// or false on failure ($msg contains error msg)
 
 // check that username is populated
 if(empty($unpw[0])){
-$s = "Error: A username was not provided.";
-return $s;}
+$msg = "Error: A username was not provided.";
+return false;}
 
 // check that username is correct length
 $L = strlen($unpw[0]);
 if($L < 1){
-  $s = "Error: A username was not provided.";
-  return $s;}
+  $msg = "Error: A username was not provided.";
+  return false;}
 elseif($L > 255){
-  $s = "Error: The username exceeds the max length of 255 characters.";
-  return $s;}
+  $msg = "Error: The username exceeds the max length of 255 characters.";
+  return false;}
 
 // check that pw is populated
 if(empty($unpw[1]) && empty($unpw[2])){
-$s = "Error: A password was not provided.";
-return $s;}
+$msg = "Error: A password was not provided.";
+return false;}
 
 // validate pw length 
 if(!empty($unpw[1])){$L = strlen($unpw[1]);}
-elseif(!empty($unpw[2])){strlen($unpw[2]);}
+elseif(!empty($unpw[2])){$L = strlen($unpw[2]);}
 else {$L = 0;}
 
 // validate password length
 if($L < 1){
-  $s = "Error: A password was not provided.";
-  return $s;}
+  $msg = "Error: A password was not provided.";
+  return false;}
 elseif($L > 255){
-  $s = "Error: The password exceeds the max length of 255 characters.";
-  return $s;}
+  $msg = "Error: The password exceeds the max length of 255 characters.";
+  return false;}
 
 // check for emerg login
 $q = <<<ENdXxu
@@ -189,16 +194,22 @@ else {
         if($unpw[0] == "slcc"){
         if($unpw[1] == "gardens" || $unpw[2] == md5("gardens")){
           $_SESSION['uname'] = $unpw[0];
+          $_SESSION['userid'] == 0;
           $_SESSION['psswd'] = md5("gardens");
-          return null;
+          $_SESSION['permrole'] = "Admin";
+          $_SESSION['permid'] = 1;
+          $msg = '{"UserPermissionKey":"1", "Role":"Admin", "UserName":"slcc"}';
+          return true;
 }}}}}}
 
 // format query to get this user
 $sqlun = $dbcxn->real_escape_string($unpw[0]);
 $q = <<<ENdXxu
-SELECT u.UserName, u.Password, up.Role 
+SELECT u.UserKey, u.UserName, u.Email, u.Password, u.PhoneNumber, 
+u.CreatedDate, u.LastModifiedDate, 
+p.UserPermissionKey, p.Role, p.RoleAccess 
 FROM Users u
-LEFT JOIN UserPermissions up ON up.UserPermissionKey = u.UserPermissionKey
+LEFT JOIN UserPermissions p ON p.UserPermissionKey = u.UserPermissionKey
 WHERE u.ArchivedDate IS NULL
 AND u.UserName = '$sqlun'
 ENdXxu;
@@ -206,25 +217,27 @@ ENdXxu;
 // run the query
 $rs = $dbcxn->query($q);
 if(empty($rs)){
-  $s = "Error: The username or password was not found.";
-  return $s;}
+  $dberr = $dbcxn->error;
+  error_log("SLCCAuthenticate.php.validateUsernameAndPassword.  Database error: {$dberr}. Query: $q.");
+  $msg = "Error: The username or password was not found.";
+  return false;}
 
 // get the number of rows
 $nr = $rs->num_rows;
 if(empty($nr)){
-  $s = "Error: The username and password combination was not found.";
-  return $s;}
+  $msg = "Error: The username and password combination was not found.";
+  return false;}
 if($nr != 1){
-  $s = "Error: The username or password is not valid.";
-  return $s;}
+  $msg = "Error: The username or password is not valid.";
+  return false;}
 
 // get the row
-$row = $rs->fetch_array();
+$row = $rs->fetch_assoc();
 
 // validate the salt/hash combo from the database
 if(empty($row['Password'])){
-  $s = "Error: The user or password was not found.";
-  return $s;}
+  $msg = "Error: The user or password was not found.";
+  return false;}
 
 // get the expected salt/hash combination from the db user record
 $expectedHash = $row['Password'];
@@ -238,19 +251,25 @@ $expectedHash = $row['Password'];
 if(!empty($unpw[1])){$actualHash = crypt($unpw[1], $expectedHash);}
 elseif(!empty($unpw[2])){$actualHash = $unpw[2];}
 else {
-  $s = "Enter your username and password.";
-  return $s;}
+  $msg = "Enter your username and password.";
+  return false;}
 
 // compare the two hashes
-$n = hash_equals($expectedHash, $actualHash);
+$n = hashes_match($expectedHash, $actualHash);
 if(empty($n)){
-  $s = "Error: The username and password combination was not valid.";
-  return $s;}
+  $msg = "Error: The username and password combination was not valid.";
+  return false;}
 
 // the hash is valid, store successful login to session
 $_SESSION['uname'] = $unpw[0];
+$_SESSION['userid'] = (int)$row['UserKey'];
 $_SESSION['psswd'] = $actualHash;
 $_SESSION['permrole'] = $row['Role'];
+$_SESSION['permid'] = $row['UserPermissionKey'];
+
+// return the complete db row and success
+$msg = $row;
+return true;
 }  // end fcn validateUsernameAndPassword
 
 
@@ -321,9 +340,72 @@ return $dbcxn;
 
 function clearSessionPermissions(){
 $_SESSION['uname'] = null;
+$_SESSION['userid'] = null;
 $_SESSION['psswd'] = null;
 $_SESSION['permrole'] = null; 
+$_SESSION['permid'] = null;
 }  // end fcn clearSessionPermissions
+
+
+function hashes_match($exp, $act){
+$La = strlen($act);
+$Le = strlen($exp);
+
+// if string length doesn't match, the hashes don't match
+// store a mismatch in $rv so that full strings are still
+// compared (to protect against timing attacks);
+if($La != $Le){$rv = 1;} else {$rv = 0;}
+
+// get the smaller length
+$L = min($La, $Le);
+
+// perform bitwise comparison of two strings. If strings match,
+// XOR will return 0 for each bit
+for($i = 0; $i < $L; $i++){
+
+  // extract each character from strings
+  $a = $act[$i];
+  $e = $exp[$i];
+
+  // convert each character to number
+  $na = ord($a);
+  $ne = ord($e);
+
+  // XOR bit patterns: Will return 1 if bits don't match
+  $x = $na ^ $ne;
+
+  // accumulate the XOR result so the entire string is compared
+  // (to add protection against timing attacks)
+  $rv |= $x;}
+
+// return result
+return $rv === 0;
+}  // end fcn hashes_match
+
+
+function ajaxAuth(){
+global $dbcxn;
+$msg = "";
+
+// set the username/password array
+$unpw = array();
+if(!empty($_POST['username'])){$unpw[0] = $_POST['username'];} 
+  else {$unpw[0] = null;}
+if(!empty($_POST['password'])){$unpw[1] = $_POST['password'];} 
+  else {$unpw[1] = null;}
+$unpw[2] = null;
+
+// get a database connection
+$dbcxn = getMysqliConnection($errmsg);
+if(!empty($errmsg)){
+  clearSessionPermissions(); 
+  exitWithJSONStr($errmsg, null, null, null, null);}
+
+// validate the login
+$tf = validateUsernameAndPassword($unpw, $msg, $dbcxn);
+if(empty($tf)){exitWithJSONStr($msg, null, null, null, null);}
+else {exitWithJSONStr(null, null, null, null, $msg);}
+}  // end fcn ajaxAuth
 ?>
 
 
@@ -332,19 +414,25 @@ $_SESSION['permrole'] = null;
 <head>
 <title>SLCC Gardens - Login</title>
 <style type="text/css">
-body {font-size:11pt;}
-#loginForm {display:inline-block; border:solid 2px #2F441C; background-color:#B58E50;
-     padding:2em; text-align:center; margin:0 2em 0 0; vertical-align:top;}
-input {display:block; margin:1em 0; background-color:#ffffff; 
-     padding-left:0.25em; width:15em;}
-input:focus {outline:2px solid #d19165; background-color:#fafffd;}
-#loginForm button {color:#2F441C; background-color:#BB5303; padding:0.5em 1em;
-     display:block; font-weight:bold; margin:2em auto 1em; 
-     border:2px solid #2F441C; border-radius:5px;}
-#loginForm button:hover {background-color:#2F441C; color:#BB5303; 
-     border:2px solid #BB5303;}
-h2, h3, h4 {color:#2F441C; margin:0;}
-#errmsg {margin:2em; padding:0.5em; background-color:#D6D4D6; box-sizing:border-box;}
+body {font-family:"Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size:14pt;}
+#loginForm {display:inline-block; padding:0; box-shadow:2px 2px 2px #cccccc;
+  background-color:#fefefe; border:1px solid #000000; width:25em;}
+#loginForm div.header {margin:0; background-color:#333333;
+  color:#ffffff; text-align:center; vertical-align:middle; display:flex;
+  flex-direction:row; flex-wrap:nowrap; justify-content:space-between;
+  align-items:center;}
+#loginForm div.header img {flex:0 0 auto; margin:0.25em;}
+#loginForm div.header h2 {color:#ffffff; text-align:center;
+  flex:1 1 auto;}
+#loginForm div.unpw {margin:1em; padding:0;}
+input {width:100%; display:block; margin:2em 0; box-sizing:border-box;}
+input:focus {background-color:#fffffe;}
+#loginForm div.btnGroup {margin:0; padding:0.25em; background-color:#333333; color:#ffffff;}
+#loginForm button {background-color:#0044ff; border-radius:12px;
+  margin:0.25em 1em; padding:1em; border:none; color:#ffffff;}
+#loginForm button:hover {background-color:#080808; color:#f5f5f5;}
+#errmsg {color:#f00000; margin:1em;}
 </style>
 <link rel="shortcut icon" type="image/x-icon" href="images/static/slccgardensfave.ico" />
 <meta charset="utf8" />
@@ -354,12 +442,20 @@ h2, h3, h4 {color:#2F441C; margin:0;}
 
 <!-- login form -->
 <form id="loginForm" method="post" action="<?php echo $protectedPage; ?>">
-<input id="uname" name="uname" type="text" placeholder="username" maxlength="255" />
-<input id="psswd" name="psswd" type="password" placeholder="password" maxlength="255" />
+<div class="header">
+<img src="../img/slccgsm.png" />
+<h2>Login</h2>
+</div>
 <p id="errmsg">
 <?php echo $msg; ?>
 </p>
+<div class="unpw">
+<input id="uname" name="uname" type="text" placeholder="username" maxlength="255" />
+<input id="psswd" name="psswd" type="password" placeholder="password" maxlength="255" />
+</div>
+<div class="btnGroup">
 <button id="loginFormsubm" name="loginFormsubm" type="button">Login</button>
+</div>
 </form>
 
 
@@ -448,3 +544,4 @@ f.submit();
 </body>
 </html>
 <?php exit(); ?>
+
