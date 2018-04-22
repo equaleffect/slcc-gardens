@@ -1,3 +1,4 @@
 /nbproject/
 .idea
 *.marks
+php/dbconfig.php
