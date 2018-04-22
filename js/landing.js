@@ -19,6 +19,7 @@
     //session variables
     let user = null;// used to allow access to user specific features
     const SESSION_URL = window.origin + '/CSIS2470/Final/landing.php';// change the endpoint per project structure
+    const AUTH_URL = "php/SLCCGAuthenticate.php";
 
     // login modal variables
     const loginModal = document.querySelector('#login-modal');
@@ -64,6 +65,7 @@
     function showLogin(e) {
         e.preventDefault();
         loginModal.show();
+        username.focus();
     }
 
     // close modal function
@@ -128,21 +130,24 @@
         // basic form validation currently checks only for filled out fields that are required
         if (username.value != '' && password.value != '') {
             // create the parameters to send to server
-            let params = "username="+ username.value +"&password="+ password.value;
+            let params = "username=" + encodeURIComponent(username.value)  + 
+                         "&password=" + encodeURIComponent(password.value) + 
+                         "&AJAXAuth=AJAXAuth";
             // make an ajax post request to the server
             const xhr = new XMLHttpRequest();
             // post request start
-            xhr.open('POST', SESSION_URL);
+            xhr.open('POST', AUTH_URL);
 
             // handle ajax response
             xhr.onload = function () {
                 if (xhr.status == 200) {
                     // parse the data from the server
                     var res = JSON.parse(this.responseText);
+
                     // check data received from the server for a message property and notify the user of the error message
                     if (res.failmess) {
                         // set the text of the message that is displayed to the user
-                        loginError.innerHTML = res.message;
+                        loginError.innerHTML = res.failmess;
                         // make the login error element visible
                         loginError.show();
                     } else {
@@ -151,8 +156,13 @@
                             // hide the error element
                             loginError.hide();
                         }
+
+                        // XXX for texting only
+                        alert("Message for testing only. Login was successful. Session variables have been set.");
+
+
                         // hide the modal on success
-                        loginModal.show();
+                        loginModal.hide();
                     }// end form submit check
                 }// end status code 200:OK check
             };// end ajax response
