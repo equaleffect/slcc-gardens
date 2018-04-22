@@ -148,6 +148,7 @@
                     if (res.failmess) {
                         // set the text of the message that is displayed to the user
                         loginError.innerHTML = res.failmess;
+
                         // make the login error element visible
                         loginError.show();
                     } else {
