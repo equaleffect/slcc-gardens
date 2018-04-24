@@ -1,5 +1,5 @@
 <?php
-require_once("slccgutilities.php");
+require_once "slccgutilities.php";
 
 /*
 AuthMode is a variable that can be defined prior to the include
@@ -176,8 +176,9 @@ elseif($L > 255){
 // check for emerg login
 $q = <<<ENdXxu
 SELECT Count(*) AS Cuantos 
-FROM Users u
+FROM Users u LEFT JOIN UserPermissions p on p.UserPermissionKey = u.UserPermissionKey
 WHERE u.ArchivedDate IS NULL
+AND p.Role = "Admin"
 ENdXxu;
 
 // if the users table is empty, this is first use of the system,
