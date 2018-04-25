@@ -217,6 +217,10 @@
     var emip = document.getElementById("email");
     var phip = document.getElementById("phone");
     var pwip = document.getElementById("new-password");
+    var regerr = document.getElementById("register-error");
+
+    // hide a previously shown error message
+    regerr.style.display = "none";
 
     // get values from input fields
     var un = unip.value.trim();
@@ -269,16 +273,17 @@
 
     // check for eror
     if(regObj.failmess){
-      var ediv = document.getElementById("register-error");
       if(Array.isArray(regObj.failmess)){
         var s = regObj.failmess.join(" ");
-        ediv.textContent = s;}
-      else {ediv.textContent = regObj.failmess;}
+        regerr.textContent = s;}
+      else {regerr.textContent = regObj.failmess;}
+      regerr.style.display = "block";
       return;}
 
     // if you get here, registration was processed w/o error.
     var rv = confirm("Your registration has been processed.  Click OK to log in.");
-    if(rv){swapToLogin();}    
+    if(rv){swapToLogin();} 
+    else {closeRegisterModal();}   
     }  // end inner fcn processRegistratioReturn
 
          

@@ -200,7 +200,7 @@ if(empty($rv)){
 // if you get here add seems to be a success, write query to 
 // check db for new user
 $sqlun = $dbcxn->real_escape_string($_POST['uname']);
-$q = "SELECT u.*, p.Role FROM User u LEFT JOIN UserPermissions p " .
+$q = "SELECT u.*, p.Role FROM Users u LEFT JOIN UserPermissions p " .
 "ON p.UserPermissionKey = u.UserPermissionKey " . 
 "WHERE u.UserName = '{$sqlun}'";
 
@@ -219,7 +219,7 @@ if(!$rs){
   exitWithJSONStr($s, null, null, null, null);}
 
 // check that only a single row was returned
-$nr = $dbcxn->num_rows;
+$nr = $rs->num_rows;
 if($nr != 1){
   $errmsg[] = "User registration failed due to a database error.";
   $s = implode(" ", $errmsg);

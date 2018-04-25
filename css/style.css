@@ -361,6 +361,7 @@ ul {
     display: none;
     color: red;
     font-weight: bold;
+    padding:0.5em;
 }
 /*end login styles*/
 
