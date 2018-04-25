@@ -223,7 +223,8 @@ if(empty($rs)){
 
 // scan result set, make option elements
 while($row = $rs->fetch_array()){
-  $opt[] = "<option value=\"{$row['UserPermissionKey']}\">{$row['Role']}</option>";
+  $htmlRole = htmlspecialchars($row['Role']);
+  $opt[] = "<option value=\"{$htmlRole}\">{$htmlRole}</option>";
 } // end while
 
 // join and return option list

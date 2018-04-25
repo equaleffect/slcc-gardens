@@ -84,6 +84,7 @@
     function showRegister(e) {
         e.preventDefault();
         registerModal.show();
+        document.getElementById("new-username").focus();
     }
 
     function closeRegisterModal(e) {
@@ -142,8 +143,14 @@
             // handle ajax response
             xhr.onload = function () {
                 if (xhr.status == 200) {
-                    // parse the data from the server
-                    var res = JSON.parse(this.responseText);
+                    // parse the data from the server. Some AJAX calls
+                    // return an error string instead of JSON. The
+                    // try-catch controlls for that.
+                    var t = this.responseText;
+                    try {var res = JSON.parse(t);}
+                    catch(e){
+                      var res = {};
+                      res.failmess = t;}
 
                     // check data received from the server for a message property and notify the user of the error message
                     if (res.failmess) {
@@ -202,7 +209,9 @@
     registerModal.onsubmit = registerUser;
 
 
-     function registerUser(){
+    function registerUser(e){
+    e.preventDefault();
+
     // reference input fields
     var unip = document.getElementById("new-username");
     var emip = document.getElementById("email");
@@ -223,7 +232,7 @@
     var a = encodeURIComponent(un);
     var b = encodeURIComponent(em);
     var c = encodeURIComponent(ph);
-    var d = encodeURIComponenet(pw);
+    var d = encodeURIComponent(pw);
 
     // make post string
     var poststr = "AJAXAdd=AJAXAdd&uname=" + a + 
@@ -249,7 +258,14 @@
 
     // get return text and convert to object
     var t = this.responseText;
-    var regObj = JSON.parse(t);
+    // alert("XXX this is reponse text: " + t);
+    // some of the authentication functions return an error message
+    // as a plain string (instead of JSON). The try-catch covers 
+    // that situation.
+    try {var regObj = JSON.parse(t);}
+    catch(e){
+      var regObj = {};
+      regObj.failmess = t;}
 
     // check for eror
     if(regObj.failmess){

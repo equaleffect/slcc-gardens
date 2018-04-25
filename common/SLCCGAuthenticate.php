@@ -257,9 +257,6 @@ else {
   return false;}
 
 // compare the two hashes
-
-// error_log("EH: $expectedHash, AH: $actualHash");
-
 $n = hashes_match($expectedHash, $actualHash);
 if(empty($n)){
   $msg = "Error: The username and password combination was not valid.";
@@ -278,33 +275,8 @@ return true;
 }  // end fcn validateUsernameAndPassword
 
 
-function getRandomPassword(){
-$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" . 
-"23456789!@#$%^&*()_-=+?";
-$s = str_shuffle($chars);
-$L = strlen($chars);
-$sta = mt_rand(0, $L - 6);
-$a = substr($s, $sta, 4);
-
-// encode timestamp
-$ts = time();
-$b = base_convert($ts, 10, 36);
-$b = substr($b, 0, 4);
-
-// encode random number
-$r = mt_rand(100000, 999999);
-$t = base_convert($r, 10, 36);
-$c = substr($t, 0, 4);
-
-// construct password
-$s = trim($a) . trim($b) . trim($c);
-$rv = str_shuffle($s);
-return $rv;
-}  // end fcn getRandomPassword
-
-
 function getMysqliConnection(&$errmsg){
-require_once("dbconfig.php");
+require "dbconfig.php";
 
 
 // make database connection

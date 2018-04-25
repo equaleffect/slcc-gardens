@@ -506,4 +506,29 @@ else {
 // return nvp(s)
 return $rv;
 }  // end fcn packJSONArray
+
+
+function getRandomPassword(){
+$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" . 
+"23456789!@#$%^&*()_-=+?";
+$s = str_shuffle($chars);
+$L = strlen($chars);
+$sta = mt_rand(0, $L - 6);
+$a = substr($s, $sta, 4);
+
+// encode timestamp
+$ts = time();
+$b = base_convert($ts, 10, 36);
+$b = substr($b, 0, 4);
+
+// encode random number
+$r = mt_rand(100000, 999999);
+$t = base_convert($r, 10, 36);
+$c = substr($t, 0, 4);
+
+// construct password
+$s = trim($a) . trim($b) . trim($c);
+$rv = str_shuffle($s);
+return $rv;
+}  // end fcn getRandomPassword
 ?>

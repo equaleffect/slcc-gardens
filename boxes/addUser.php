@@ -1,12 +1,18 @@
 <?php 
-$AuthMode = 1;
-require_once "SLCCGAuthenticate.php";
-require_once "slccgutilities.php":
+require "dbconfig.php";
+require_once("slccgutilities.php");
 
 $errmsg = array();
 
+// get a mysqli database connection
+$dbcxn = new mysqli($dbhost, $mysqlun, $mysqlpw, $dbname);
+if(!$dbcxn){
+  $s = "Registration could not be finished due to a database error.";
+  exitWithJSONStr($s, null, null, null, null);}
+
+// register new user from home page
 if(isset($_POST['AJAXAdd'])){
-  if($_POST['AJAXAdd'] == "AJAXAdd"){addAJAXUser();}}
+  if($_POST['AJAXAdd'] == "AJAXAdd"){addAJAXUser($dbcxn);}}
 
 
 function addNewUser($dbcxn){
@@ -60,7 +66,8 @@ if(!empty($_POST['phone'])){
   $set[] = "PhoneNumber = '{$s}'";}
 if(!empty($_POST['role'])){
   $s = $dbcxn->real_escape_string($_POST['role']);
-  $set[] = "UserPermissionKey = {$s}";}
+  $set[] = "UserPermissionKey = (SELECT UserPermissionKey " . 
+  "FROM UserPermissions WHERE Role = '{$s}' LIMIT 1)";}
 
 // add date/time created
 $set[] = "CreatedDate = NOW()";
@@ -164,7 +171,7 @@ if($s){
 
 // validate role
 $PV->reset($_POST['role'], "Role");
-$s = $PV->validateInt(true, null, null, true);
+$s = $PV->validateString(true, 1, 255, true);
 if($s){
   $errmsg[] = $s;
   $tf = false;}
@@ -174,10 +181,53 @@ return $tf;
 }  // end fcn validateUserMorphology
 
 
-function addAJAXUser(){
+function addAJAXUser($dbcxn){
+global $errmsg;
 
+// for self-registration, the new user is of the User role
+$_POST['role'] = "User";
 
+// call addNewUser. It takes no arguments (instead reading the global
+// $_POST array) and returns a message on success or null of failure.
+// On failure, it populates the global $errmsg array
+$rv = addNewUser($dbcxn);
 
+// on failure, return a JSON object with failmess
+if(empty($rv)){
+  $s = implode(" ", $errmsg);
+  exitWithJSONStr($s, null, null, null, null);}
+
+// if you get here add seems to be a success, write query to 
+// check db for new user
+$sqlun = $dbcxn->real_escape_string($_POST['uname']);
+$q = "SELECT u.*, p.Role FROM User u LEFT JOIN UserPermissions p " .
+"ON p.UserPermissionKey = u.UserPermissionKey " . 
+"WHERE u.UserName = '{$sqlun}'";
+
+// run query
+$rs = $dbcxn->query($q);
+if(!$rs){
+  // save error to log
+  $dberr = $dbcxn->error;
+  $s = "addUser.php.addAJAXUser select new user query failed. " .
+  "Error: {$dberr}. Query: {$q}.";
+  error_log($s);
+
+  // return error as JSON
+  $errmsg[] = "User registration did not complete due to a database error.";
+  $s = implode(" ", $errmsg);
+  exitWithJSONStr($s, null, null, null, null);}
+
+// check that only a single row was returned
+$nr = $dbcxn->num_rows;
+if($nr != 1){
+  $errmsg[] = "User registration failed due to a database error.";
+  $s = implode(" ", $errmsg);
+  exitWithJSONStr($s, null, null, null, null);}
+
+// all checks passed, return the db row as a JSON str
+$row = $rs->fetch_assoc();
+exitWithJSONStr(null, null, null, null, $row);
 }  // end fcn addAJAXUser
 
 
