@@ -196,7 +196,7 @@ else {
         if($unpw[0] == "slcc"){
         if($unpw[1] == "gardens" || $unpw[2] == md5("gardens")){
           $_SESSION['uname'] = $unpw[0];
-          $_SESSION['userid'] == 0;
+          $_SESSION['userid'] = 0;
           $_SESSION['psswd'] = md5("gardens");
           $_SESSION['permrole'] = "Admin";
           $_SESSION['permid'] = 1;
@@ -257,6 +257,9 @@ else {
   return false;}
 
 // compare the two hashes
+
+// error_log("EH: $expectedHash, AH: $actualHash");
+
 $n = hashes_match($expectedHash, $actualHash);
 if(empty($n)){
   $msg = "Error: The username and password combination was not valid.";

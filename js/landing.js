@@ -20,6 +20,7 @@
     let user = null;// used to allow access to user specific features
     const SESSION_URL = window.origin + '/CSIS2470/Final/landing.php';// change the endpoint per project structure
     const AUTH_URL = "php/SLCCGAuthenticate.php";
+    const REG_URL = "php/addUser.php";
 
     // login modal variables
     const loginModal = document.querySelector('#login-modal');
@@ -91,7 +92,7 @@
     }
 
     function swapToLogin(e) {
-        e.preventDefault();
+        if(e){e.preventDefault();}
         registerModal.hide();
         loginModal.show();
     }
@@ -196,6 +197,102 @@
 
     // register modal swap handler
     modalSwapBtns[1].addEventListener('click', swapToLogin);
+
+    // add new user through AJAX call
+    registerModal.onsubmit = registerUser;
+
+
+     function registerUser(){
+    // reference input fields
+    var unip = document.getElementById("new-username");
+    var emip = document.getElementById("email");
+    var phip = document.getElementById("phone");
+    var pwip = document.getElementById("new-password");
+
+    // get values from input fields
+    var un = unip.value.trim();
+    var em = emip.value.trim();
+    var ph = phip.value.trim();;
+    var pw = pwip.value;
+
+    // validate form fields
+    var tf = validateRegistration();
+    if(!tf){return}
+
+    // URI encode fields
+    var a = encodeURIComponent(un);
+    var b = encodeURIComponent(em);
+    var c = encodeURIComponent(ph);
+    var d = encodeURIComponenet(pw);
+
+    // make post string
+    var poststr = "AJAXAdd=AJAXAdd&uname=" + a + 
+    "&emaddr=" + b + "&phone=" + c +
+    "&psswd=" + d;
+
+    // configure xhr object (I'm ignoring browsers that are too 
+    // old to support this natively)
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", REG_URL);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = processRegistrationReturn;
+    xhr.send(poststr);
+
+
+    // inner fcn to processRegistration return value
+    function processRegistrationReturn(){
+    // check for http error
+    if(this.status != 200){
+       alert("There was an error processing this request. Please " + 
+       "refresh your browser and try again.");
+       return;}
+
+    // get return text and convert to object
+    var t = this.responseText;
+    var regObj = JSON.parse(t);
+
+    // check for eror
+    if(regObj.failmess){
+      var ediv = document.getElementById("register-error");
+      if(Array.isArray(regObj.failmess)){
+        var s = regObj.failmess.join(" ");
+        ediv.textContent = s;}
+      else {ediv.textContent = regObj.failmess;}
+      return;}
+
+    // if you get here, registration was processed w/o error.
+    var rv = confirm("Your registration has been processed.  Click OK to log in.");
+    if(rv){swapToLogin();}    
+    }  // end inner fcn processRegistratioReturn
+
+         
+    function validateRegistration(){
+   // make sure required field are present
+   if(!un){
+      alert("A username is required.");
+      unip.focus();
+      return false;}
+   if(!em){
+      alert("An email address is required.");
+      emip.focus();
+      return false;}
+   if(!pw){
+      alert("A password is required.");
+      pwip.focus();
+      return false;}
+
+    // make sure password is at least 8 chars long
+    var L = pw.length;
+    if(L < 8){
+      alert("A password must be at least 8 characters long.");
+      pwip.focus();
+      return false;}
+
+    // all checks passed
+    return true;
+    }  // end inner fcn validateRegistration
+    }  // end fcn registerUser
+
     /*******************************
      * End registration form handler
      ********************************/
