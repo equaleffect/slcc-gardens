@@ -1,5 +1,5 @@
 <?php
-require_once "slccgutilities.php";
+require_once "../boxes/slccgutilities.php";
 
 /*
 AuthMode is a variable that can be defined prior to the include

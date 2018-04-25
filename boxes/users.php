@@ -1,5 +1,5 @@
 <?php
-require_once "SLCCGAuthenticate.php";
+require_once "../common/SLCCGAuthenticate.php";
 require_once "addUser.php";
 $errmsg = array();
 $nvp = array();

@@ -19,8 +19,8 @@
     //session variables
     let user = null;// used to allow access to user specific features
     const SESSION_URL = window.origin + '/CSIS2470/Final/landing.php';// change the endpoint per project structure
-    const AUTH_URL = "php/SLCCGAuthenticate.php";
-    const REG_URL = "php/addUser.php";
+    const AUTH_URL = "common/SLCCGAuthenticate.php";
+    const REG_URL = "boxes/addUser.php";
 
     // login modal variables
     const loginModal = document.querySelector('#login-modal');

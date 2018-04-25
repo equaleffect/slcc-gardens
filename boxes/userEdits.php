@@ -1,6 +1,6 @@
 <?php 
 $AuthMode = 1;
-require_once "SLCCGAuthenticate.php";
+require_once "../common/SLCCGAuthenticate.php";
 require_once "slccgutilities.php";
 $errmsg = array();
 

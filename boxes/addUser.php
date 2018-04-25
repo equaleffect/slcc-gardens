@@ -1,6 +1,6 @@
 <?php 
-require "dbconfig.php";
-require_once("slccgutilities.php");
+require "../common/dbconfig.php";
+require_once "slccgutilities.php";
 
 $errmsg = array();
 
