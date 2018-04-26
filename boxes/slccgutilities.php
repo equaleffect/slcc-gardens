@@ -531,4 +531,14 @@ $s = trim($a) . trim($b) . trim($c);
 $rv = str_shuffle($s);
 return $rv;
 }  // end fcn getRandomPassword
+
+
+function returnSaltedHash($pw){
+$salt1 = getRandomPassword();
+$salt2 = getRandomPassword();
+$salt = $salt1 . $salt2;
+$nacl = preg_replace("/[^A-Za-z]/", "", $salt);
+$hash = crypt($pw, $nacl);
+return $hash;
+}  // end fcn returnSaltedHash
 ?>
