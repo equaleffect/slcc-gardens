@@ -1217,7 +1217,8 @@ function setValues(m, p, n, v){
 // if v is populated and m is null, create an object literal to 
 // stand in for m
 if(m == null){if(v != undefined){if(v != null){
-m = {"value": v, "focus": function(){return;}};}}}
+m = {"focus": function(){return;}};
+m[p] = v;}}}
 
 // resolve object reference
 if(m == null){
@@ -1406,6 +1407,7 @@ this.validateString = function(reqTF, minlen, maxlen, AOR){
 // if the field is populated (reqd or not) then it must be a valid
 // integer.  The field may only be unpopulated (i.e., null, undef, "")
 // if it is optional
+
 if(!reqTF){
 if(ty == "undefined"){return true;}
 if(ty == "null"){return true;}
@@ -1431,8 +1433,8 @@ if(!L){
   atf = showValidationProblem(amsg, AOR);
   return atf;}}
 
-// check for minimum length
-if(reqTF){
+// if the string is populated (req'd or not) t must have at least min chars
+if(L){
 if(minlen != null){
 var minL = parseInt(minlen, 10);
 

@@ -1,5 +1,5 @@
 <?php
-require_once("slccgutilities.php");
+require_once "../boxes/slccgutilities.php";
 
 /*
 AuthMode is a variable that can be defined prior to the include
@@ -176,8 +176,9 @@ elseif($L > 255){
 // check for emerg login
 $q = <<<ENdXxu
 SELECT Count(*) AS Cuantos 
-FROM Users u
+FROM Users u LEFT JOIN UserPermissions p on p.UserPermissionKey = u.UserPermissionKey
 WHERE u.ArchivedDate IS NULL
+AND p.Role = "Admin"
 ENdXxu;
 
 // if the users table is empty, this is first use of the system,
@@ -195,7 +196,7 @@ else {
         if($unpw[0] == "slcc"){
         if($unpw[1] == "gardens" || $unpw[2] == md5("gardens")){
           $_SESSION['uname'] = $unpw[0];
-          $_SESSION['userid'] == 0;
+          $_SESSION['userid'] = 0;
           $_SESSION['psswd'] = md5("gardens");
           $_SESSION['permrole'] = "Admin";
           $_SESSION['permid'] = 1;
@@ -274,33 +275,8 @@ return true;
 }  // end fcn validateUsernameAndPassword
 
 
-function getRandomPassword(){
-$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" . 
-"23456789!@#$%^&*()_-=+?";
-$s = str_shuffle($chars);
-$L = strlen($chars);
-$sta = mt_rand(0, $L - 6);
-$a = substr($s, $sta, 4);
-
-// encode timestamp
-$ts = time();
-$b = base_convert($ts, 10, 36);
-$b = substr($b, 0, 4);
-
-// encode random number
-$r = mt_rand(100000, 999999);
-$t = base_convert($r, 10, 36);
-$c = substr($t, 0, 4);
-
-// construct password
-$s = trim($a) . trim($b) . trim($c);
-$rv = str_shuffle($s);
-return $rv;
-}  // end fcn getRandomPassword
-
-
 function getMysqliConnection(&$errmsg){
-require_once("dbconfig.php");
+require "dbconfig.php";
 
 
 // make database connection
