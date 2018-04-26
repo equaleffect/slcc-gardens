@@ -1,5 +1,5 @@
 <?php
-require_once "SLCCGAuthenticate.php";
+require_once "../common/SLCCGAuthenticate.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,8 +24,9 @@ td {border:1px solid #000000;}
   <img src="images/static/slccg.png" />
   <a href="classifieds_landing.php">Classifieds</a> 
   | <a href="gardenbox_landing.php">Garden Box Logs</a> 
-  | <a href="manage_members.php">Manage Members</a> 
-  | <a href="../index.html">Back to Main Site</a>
+  | <a href="users.php">Manage Members</a> 
+  | <a href="userSettings.php">User Settings</a> 
+  | <a href="https://www.slccgardens.com/">Back to Main Site</a>
 </nav>
 <h1>This is the garden box logs landing page.</h1>
 <h2>Table of garden boxes</h2>

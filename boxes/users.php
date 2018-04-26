@@ -239,11 +239,13 @@ if($_SESSION['permrole'] != "Admin"){
   $pwmsg = "Password was not changed. You do not have the required privileges.";
   return false;}
 
-// get a new password
-$newpw = getRandomPassword();
+// make a new password
+$s = getRandomPassword();
+$t = preg_replace("/[^A-Za-z2-9]/", "A", $s);
+$newpw = preg_replace("/[O01l]/", "x", $t);
+
+// salt and hash the new pw
 $salt = getRandomPassword();
-$nacl = preg_replace("/[^A-Za-z]/", "", $salt);
-// $pwhash = password_hash($newpw, PASSWORD_DEFAULT);
 $pwhash = crypt($newpw, $nacl);
 
 // make password, username and email SQL-safe
@@ -533,7 +535,9 @@ return true;
 
 
 function validateUserMorphology(){
-alert("FYI: Client side validation needs to be written.");
+// alert("FYI: Client side validation needs to be written.");
+
+/* Client side validation still needs to be written */
 
 // validate username
 // validate email address
