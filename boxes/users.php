@@ -24,6 +24,13 @@ $rolelist = getRoleList($dbcxn);
 // $tt[0] = html, $tt[1] = js, $tt[2] = user message
 $tt = getUsers($dbcxn);
 
+// enable manage users menu
+$manmem = null;
+if($_SESSION){
+  if($_SESSION['permrole']){
+    if($_SESSION['permrole'] == "Admin"){
+      $manmem = "<a href=\"users.php\">Manage Members</a>";}}}
+
 
 function getUsers($dbcxn){
 global $msg;
@@ -275,13 +282,14 @@ $pwmsg = "The password for {$username} has been changed to:\n\n" .
 "{$newpw}\n\nInform them by email at {$email}.";
 return true;
 }  // end fcn changePw
-
-
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>SLCC Gardens - User Accounts</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style type="text/css">
 html {margin:0; padding:0; font-family:"Franklin Gothic Medium", 
   Arial, sans-serif; font-size:10pt; width:100%;}
@@ -305,6 +313,9 @@ body {margin:0; padding:0; font-size:10pt; min-width:100%;}
 #uta {padding:0; margin:1em; border-collapse:separate; 
      border-spacing:1px; border:solid 1px #000000;}
 #uta tr.currus td {font-weight:bold;}
+#uta tr:nth-of-type(5n+1){background-color:#ffffff;}
+#uta tr:nth-of-type(5n+2){background-color:#ffffff;}
+#uta tr:nth-of-type(5n+3){background-color:#ffffff;}
 #uta tr:nth-of-type(5n+4){background-color:#f5f0af;}
 #uta tr:nth-of-type(5n+5){background-color:#f5f0af;}
 #uta th {background-color:#1d403d; color:#f8f8f8; padding:0.1em 0.3em; 
@@ -362,12 +373,96 @@ body {margin:0; padding:0; font-size:10pt; min-width:100%;}
 #messaging div.err {margin:0; padding:0; color:#660000;}
 #messaging p {margin:1em 0 0.25em 1em;}
 #messaging ul {margin:0 0 1em 0;}
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #535353;
+}
+
+.header{
+background: #cdeb8e;
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NkZWI4ZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNhNWM5NTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top, #cdeb8e 0%, #a5c956 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cdeb8e), color-stop(100%,#a5c956));
+background: -webkit-linear-gradient(top, #cdeb8e 0%,#a5c956 100%);
+background: -o-linear-gradient(top, #cdeb8e 0%,#a5c956 100%);
+background: -ms-linear-gradient(top, #cdeb8e 0%,#a5c956 100%);
+background: linear-gradient(to bottom, #cdeb8e 0%,#a5c956 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cdeb8e', endColorstr='#a5c956',GradientType=0 );
+height: 140px;
+}
+
+.logo{
+    background-image:url('../img/logox.png');
+    width: 271px;
+    height: 135px;
+}
+
+/* Style the top navigation bar */
+.topnav {
+    overflow: hidden;
+    background-color: #446d32;
+}
+
+/* Style the topnav links */
+.topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Style the content */
+.content {
+    background-color: #d4dfcf;
+    padding: 10px;
+    /* height: 200px; Should be removed. Only for demonstration */
+}
+
+/* Style the footer */
+.footer {
+    background-color: #446d32;
+    padding: 10px;
+    color: #fff;
+}
 																
 </style>
-<link rel="shortcut icon" type="image/x-icon" href="../img/stafficon.ico" />
+<link rel="shortcut icon" type="image/x-icon" href="../img/slccgardensfave.ico" />
 </head>
 
 <body>
+
+<div class="header">
+    <div class="logo"></div>
+</div>
+
+<div class="topnav">
+  <a href="#">Classifieds</a>
+  <a href="gardenbox_landing.php">Box Logs</a>
+  <?php if(!empty($manmem)){echo $manmem;} ?>
+  <a href="userSettings.php">My Settings</a>
+  <a href="https://www.slccgardens.com/">Main Site</a>
+</div>
+
+<div class="content">
+  <h2>Administrator User Management</h2>
+  <p>Add, inactivate, or edit user accounts</p>
+
+
 <!-- change role popup -->
 <div id="changerole">
   <div id="role1">Admin</div>
@@ -451,6 +546,13 @@ if(!empty($tt[2])){echo "<p>{$tt[2]}</p>";}
 <input type="hidden" name="addNewUser" value="addNewUser" />
 
 </form>
+</div>
+
+<div class="footer">
+  <p>&copy; 2018 SLCC Gardens</p>
+</div>
+
+
 <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../js/slccgutilities.js"></script>
 <script type="text/javascript">

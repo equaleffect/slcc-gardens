@@ -1,9 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>SLCC Gardens - Demo site</title>
+<?php
+// add member management link for administrators
+$manmem = null;
+if($_SESSION){
+  if($_SESSION['permrole']){
+    if($_SESSION['permrole'] == "Admin"){
+      $manmem = "<a href=\"users.php\">Manage Members</a>";}}}
+?>
+
+
+
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
 <style>
 * {
     box-sizing: border-box;
@@ -15,6 +26,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: #535353;
 }
+
+h2 {margin:1em 1rem 0.25em 1rem;}
+h2+p {margin:0.25em 1rem 1rem 1rem;} 
 
 .header{
 background: #cdeb8e;
@@ -30,7 +44,7 @@ height: 140px;
 }
 
 .logo{
-    background-image:url('logo.png');
+    background-image:url('../img/logox.png');
     width: 271px;
     height: 135px;
 }
@@ -61,7 +75,7 @@ height: 140px;
 .content {
     background-color: #d4dfcf;
     padding: 10px;
-    height: 200px; /* Should be removed. Only for demonstration */
+    /* height: 200px; Should be removed. Only for demonstration */
 }
 
 /* Style the footer */
@@ -72,27 +86,35 @@ height: 140px;
 }
 </style>
 </head>
-<body>
+
+
+
+
     
 <div class="header">
     <div class="logo"></div>
 </div>
 
 <div class="topnav">
-  <a href="#">Link 1</a>
-  <a href="#">Link 2</a>
-  <a href="#">Link 3</a>
+  <a href="#">Classifieds</a>
+  <a href="gardenbox_landing.php">Box Logs</a>
+  <?php if(!empty($manmem)){echo $manmem;} ?>
+  <a href="userSettings.php">My Settings</a>
+  <a href="https://www.slccgardens.com/">Main Site</a>
 </div>
 
 <div class="content">
   <h2>Main Content</h2>
   <p>Will be displayed here</p>
-</div>
 
+
+
+
+
+</div>
 <div class="footer">
   <p>&copy; 2018 SLCC Gardens</p>
 </div>
 
-</body>
-</html>
+
 

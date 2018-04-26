@@ -11,6 +11,13 @@ $msg = makeChanges($dbcxn);}}
 // get user information for the currently logged in person
 $userInfo = getUserInfo($dbcxn, $err);
 
+// add member management link for administrators
+$manmem = null;
+if($_SESSION){
+  if($_SESSION['permrole']){
+    if($_SESSION['permrole'] == "Admin"){
+      $manmem = "<a href=\"users.php\">Manage Members</a>";}}}
+
 
 function makeChanges($dbcxn){
 $msg = "";
@@ -302,9 +309,11 @@ height: 140px;
 </div>
 
 <div class="topnav">
-  <a href="#">Link 1</a>
-  <a href="#">Link 2</a>
-  <a href="#">Link 3</a>
+  <a href="#">Classifieds</a>
+  <a href="gardenbox_landing.php">Box Logs</a>
+  <?php if(!empty($manmem)){echo $manmem;} ?>
+  <a href="userSettings.php">My Settings</a>
+  <a href="https://www.slccgardens.com/">Main Site</a>
 </div>
 
 <div class="content">
