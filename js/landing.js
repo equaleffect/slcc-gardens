@@ -17,8 +17,6 @@
     const container = document.querySelector('.container');
 
     //session variables
-    let user = null;// used to allow access to user specific features
-    const SESSION_URL = window.origin + '/CSIS2470/Final/landing.php';// change the endpoint per project structure
     const AUTH_URL = "common/SLCCGAuthenticate.php";
     const REG_URL = "boxes/addUser.php";
 
@@ -225,7 +223,7 @@
     // get values from input fields
     var un = unip.value.trim();
     var em = emip.value.trim();
-    var ph = phip.value.trim();;
+    var ph = phip.value.trim();
     var pw = pwip.value;
 
     // validate form fields
@@ -268,17 +266,20 @@
     // that situation.
     try {var regObj = JSON.parse(t);}
     catch(e){
-      var regObj = {};
-      regObj.failmess = t;}
+          var regObj = {};
+          regObj.failmess = t;
+    }
 
     // check for eror
     if(regObj.failmess){
-      if(Array.isArray(regObj.failmess)){
-        var s = regObj.failmess.join(" ");
-        regerr.textContent = s;}
-      else {regerr.textContent = regObj.failmess;}
-      regerr.style.display = "block";
-      return;}
+        if(Array.isArray(regObj.failmess)){
+            var s = regObj.failmess.join(" ");
+            regerr.textContent = s;
+        } else {regerr.textContent = regObj.failmess;}
+
+        regerr.style.display = "block";
+        return;
+    }
 
     // if you get here, registration was processed w/o error.
     var rv = confirm("Your registration has been processed.  Click OK to log in.");
@@ -288,30 +289,34 @@
 
          
     function validateRegistration(){
-   // make sure required field are present
-   if(!un){
-      alert("A username is required.");
-      unip.focus();
-      return false;}
-   if(!em){
-      alert("An email address is required.");
-      emip.focus();
-      return false;}
-   if(!pw){
-      alert("A password is required.");
-      pwip.focus();
-      return false;}
+        // make sure required field are present
+        if(!un){
+            alert("A username is required.");
+            unip.focus();
+            return false;
+        }
+        if(!em) {
+            alert("An email address is required.");
+            emip.focus();
+            return false;
+        }
+        if(!pw){
+            alert("A password is required.");
+            pwip.focus();
+            return false;
+        }
 
-    // make sure password is at least 8 chars long
-    var L = pw.length;
-    if(L < 8){
-      alert("A password must be at least 8 characters long.");
-      pwip.focus();
-      return false;}
+        // make sure password is at least 8 chars long
+        var L = pw.length;
+        if(L < 8){
+            alert("A password must be at least 8 characters long.");
+            pwip.focus();
+            return false;
+        }
 
-    // all checks passed
-    return true;
-    }  // end inner fcn validateRegistration
+        // all checks passed
+        return true;
+        }  // end inner fcn validateRegistration
     }  // end fcn registerUser
 
     /*******************************

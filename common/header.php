@@ -29,6 +29,13 @@
     </ul>
 </nav>
 <!--end top navigation bar-->
+<!--small screen side menu-->
+<div class="side-nav" id="side-menu">
+    <a href="#" id="side-close" class="btn-close">&times;</a>
+    <a href="#login" id="side-login">Login</a>
+    <a href="#register" id="side-register">Register</a>
+</div>
+<!--end side menu-->
 <!--login modal start-->
 <div id="login-modal" class="modal">
     <form class="modal-content" id="login-form">
