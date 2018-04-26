@@ -396,3 +396,36 @@ ul {
         overflow-y: scroll;
     }
 }
+
+.classifiedsContainer {
+    background-image: url(../img/garden-basket.jpeg);
+    background-size: 100%;
+}
+
+.overlayContainerFull {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .6);
+}
+
+.bulletinFormContainer {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    color: white;
+}
+
+.bulletinFormButton {
+    width: 75px;
+    padding: 5px;
+    text-align: center;
+    color: #fff;
+    border: #fff solid 0.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: transparent;
+}
+
+.bulletinFormButton:hover {
+    background-color: rgba(0, 0, 0, .7);
+}

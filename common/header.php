@@ -1,9 +1,7 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>SLCC Gardens Classifieds</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -31,27 +29,6 @@
     </ul>
 </nav>
 <!--end top navigation bar-->
-<!--small screen side menu-->
-<div class="side-nav" id="side-menu">
-    <a href="#" id="side-close" class="btn-close">&times;</a>
-    <a href="#login" id="side-login">Login</a>
-    <a href="#register" id="side-register">Register</a>
-</div>
-<!--end side menu-->
-<!--split main content area-->
-<div class="container">
-    <!--left side is for garden boxes-->
-    <div class="split left">
-        <h1>Garden Boxes</h1>
-        <a href="#linkToGardenBoxes" class="btn-link">Record Box Progress</a>
-    </div>
-    <!--right side is for classifieds-->
-    <div class="split right">
-        <h1>Classifieds</h1>
-        <a href="#linkToClassifieds" class="btn-link">Buy/Sell/Trade</a>
-    </div>
-</div>
-<!--end split main content area-->
 <!--login modal start-->
 <div id="login-modal" class="modal">
     <form class="modal-content" id="login-form">
@@ -96,7 +73,7 @@
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
             <label for="phone">Phone #</label>
-            <input type="text" id="phone" name="phone">
+            <input type="number" id="phone" name="phone">
             <label for="new-password">Password</label>
             <input type="password" id="new-password" name="new-password" required>
         </div>
