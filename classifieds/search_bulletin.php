@@ -15,7 +15,6 @@ if (isset($_POST['searchTitle']) || isset($_POST['searchDescription'])) {
 
     if ($bulletinSearchQueryResult->num_rows > 0) {
         //Table to store each bulletin
-        echo "<table>";
         while ($bulletin = $bulletinSearchQueryResult->fetch_assoc()) {
             $title = $bulletin['Title'];
             $description = $bulletin['Description'];
@@ -23,21 +22,18 @@ if (isset($_POST['searchTitle']) || isset($_POST['searchDescription'])) {
 
             //Style and format each individual pod
             echo <<< HTML
-            <tr>
-                <td>
-                    <div style="color: white">
-                    <div>
-                    <img src="../img/no-img-available.jpg" alt=""" style="width: 300px; height: 300px">
-                    <br>
-                    <h5>Title: $title</h5>
-                    <h5>Description: $description</h5>
-                    <img src="../img/profile-holder.jpg" alt=""" style="width: 30px; height: 30px">
-                    <h5>User Name (Placeholder)</h5>  
-                    <h5>Created: $createdDate</h5>    
-                    <br/>
+            <div class="col-sm-4">
+                <div class="panel panel-default" style="min-height: 450px">
+                    <div class="panel-heading panelHeading">$title</div>
+                    <div class="panel-body">
+                        <img class="img-responsive" src="../img/no-img-available.jpg" alt=""" style="width: 350px; height: 250px">
+                        <br>
+                        <p><b>Description: </b> $description</p>
+                        <h5><b>User: </b>User Name (Placeholder)</h5>  
+                        <h5><b>Created: </b>$createdDate</h5>  
                     </div>
-                </td>    
-            </tr>        
+                </div>                        
+            </div>       
 HTML;
         }
     }
