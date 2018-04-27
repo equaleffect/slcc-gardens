@@ -14,7 +14,6 @@
     // landing page variables
     // login modal variables
     const loginModal = document.querySelector('#login-modal');
-    const loginError = document.querySelector('#cs-login-error');
     const topLoginBtn = document.getElementById('top-login');
     const sideLoginBtn = document.getElementById('side-login');
 
@@ -37,8 +36,6 @@
     registerModal.hide = hide;
     loginModal.show = show;
     loginModal.hide = hide;
-    loginError.show = show;
-    loginError.hide = hide;
 
     /******************
      * helper functions
