@@ -27,7 +27,7 @@
         die('Invalid query: ' . mysqli_error($con));
     }
     
-    echo "<h2>The following contact(s) were found: </h2><br>";
+    echo "<h2>The following bulletin(s) were found: </h2><br>";
     echo "<table class='table'><thead><th>Title</th><th>Description</th></thead><tbody>";
     while ($row = $return->fetch_assoc()) 
     {
