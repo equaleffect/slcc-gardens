@@ -86,7 +86,9 @@
     }
 
     function swapToLogin(e) {
-        e.preventDefault();
+        if (e != undefined) {
+            e.preventDefault();
+        }
         registerModal.hide();
         loginModal.show();
     }

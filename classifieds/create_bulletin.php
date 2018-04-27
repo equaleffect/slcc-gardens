@@ -5,7 +5,6 @@
         <meta charset="UTF-8">
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="../css/header.css">
-        <script src="../js/jquery-3.3.1.min.js" type="text/javascript"></script>
     </head>
     <body class="classifiedsContainer">
         <!--top navigation bar -->
@@ -35,6 +34,8 @@
             </div>
         </div>
         <!--end bulletin creation form -->
+        <script src="../js/jquery-3.3.1.min.js" type="text/javascript"></script>
         <script src="../js/header.js" type="text/javascript"></script>
+        <script src="../js/nav.js" type="text/javascript"></script>
     </body>
 </html>

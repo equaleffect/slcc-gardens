@@ -11,7 +11,7 @@
     </span>
     <ul class="top-nav">
         <li class="cs-nav-brand">
-            <a href="/home">EVENTERS</a>
+            <a href="/slcc-gardens">SLCC Gardens</a>
         </li>
         <li class="nav-user">
             <a href="#login" id="top-login">Login</a>
@@ -22,12 +22,15 @@
         <li class="cs-user-toggle user-enabled" id="nav-user">
             <a class="cs-top-dropdown cs-username" id="top-user"></a>
             <ul class="cs-top-dropdown">
-                <li><a href="/boxes/userEdits.php">Profile</a></li>
-                <li><a href="/classifieds/userBulletins.php">My Bulletins</a></li>
+                <li><a href="userEdits.php">Profile</a></li>
+                <li><a href="userBulletins.php">My Bulletins</a></li>
             </ul>
         </li>
         <li class="nav-user user-enabled" id="nav-logout">
             <a href="#logout" id="top-logout">Logout</a>
+        </li>
+        <li class="nav-user" id="nav-add-bulletins">
+            <a href="create_bulletin.php" id="top-logout">Post Bulletin</a>
         </li>
     </ul>
 </nav>
@@ -38,8 +41,8 @@
     <a href="#login" class="cs-default" id="side-login">Login</a>
     <a href="#register" class="cs-default" id="side-register">Register</a>
     <span class="cs-user cs-username" id="side-user"></span>
-    <a href="/boxes/userEdits.php" class="cs-user">Profile</a>
-    <a href="/classifieds/userBulletins.php" class="cs-user">My Bulletins</a>
+    <a href="userEdits.php" class="cs-user">Profile</a>
+    <a href="userBulletins.php" class="cs-user">My Bulletins</a>
     <a href="#logout" class="cs-user" id="side-logout">Logout</a>
 </div>
 <!--end side menu-->
@@ -53,9 +56,9 @@
         <div class="modal-body">
             <div class="cs-error" id="cs-login-error"></div>
             <label for="username">Username</label>
-            <input type="text" id="username" name="username">
+            <input type="text" id="username" name="uname">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" name="psswd">
         </div>
         <div class="modal-footer">
             <ul class="modal-btn-group">
