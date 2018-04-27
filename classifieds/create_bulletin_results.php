@@ -19,22 +19,23 @@
     
     if(isset($_POST['Title'], $_POST['Description']))
     {                              
+        //Use form fields to insert Title and Description into the database
         $newBulletinInsertQuery = $dbLogin->prepare("INSERT INTO SLCCGardens.Bulletins (UserKey, Title, Description, CreatedDate, ExpirationDate) VALUES ('$userKey', '$title', '$description', '$createdDate', '$expirationDate')");
         $newBulletinInsertQuery->execute();
             if ($dbLogin->query($newBulletinInsertQuery) === FALSE) {
                 echo "Error: " . $newBulletinInsertQuery . "<br>" . $dbLogin->error;
             }                        
 
-        echo "<div class=\"overlayContainerFull\">";    
-            if ($newBulletinInsertQuery->affected_rows > 0)
-            {            
-            echo "<h1>Bulletin Successfully Created!</h1>";
-            }
-            else 
-            {
-                echo "<h1>There was a problem creating the bulletin! Please go back and try again. For additional support please contact our Technical Help Desk</h1>"; 
-            }
-        echo "</div>";
+            echo "<div class=\"overlayContainerFull\">";    
+                if ($newBulletinInsertQuery->affected_rows > 0)
+                {            
+                    echo "<h1>Bulletin Successfully Created!</h1>";
+                }
+                else 
+                {
+                    echo "<h1>There was a problem creating the bulletin! Please go back and try again. For additional support please contact our Technical Help Desk</h1>"; 
+                }
+            echo "</div>";
     }
     
     function clean_input($var)
