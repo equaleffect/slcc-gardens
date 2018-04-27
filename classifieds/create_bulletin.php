@@ -14,7 +14,7 @@
         ?>
         <!--end navigation bar --
         <!--begin form for bulletin creation -->
-        <div class="overlayContainerFull">
+        <div class="overlayContainerFull" style="height: 100% !important">
             <div class="bulletinFormContainer">
                 <h2>Create A New Classified Bulletin</h2>
                 <br>
