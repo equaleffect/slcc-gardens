@@ -11,7 +11,7 @@
     </span>
     <ul class="top-nav">
         <li class="cs-nav-brand">
-            <a href="/slcc-gardens">SLCC Gardens</a>
+            <a href="../index.php">SLCC Gardens</a>
         </li>
         <li class="nav-user">
             <a href="#login" id="top-login">Login</a>
@@ -30,7 +30,7 @@
             <a href="#logout" id="top-logout">Logout</a>
         </li>
         <li class="nav-user" id="nav-add-bulletins">
-            <a href="create_bulletin.php" id="top-logout">Post Bulletin</a>
+            <a href="../classifieds/create_bulletin.php" id="top-logout">Post Bulletin</a>
         </li>
     </ul>
 </nav>
