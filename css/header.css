@@ -1,0 +1,223 @@
+/*top navbar styles*/
+.user-enabled, .cs-user, .nav-user {
+    display: none;
+}
+
+.cs-navbar {
+    width: 100%;
+    height: 62px;
+    background-color: rgb(40,40,40);
+}
+
+.top-nav {
+    float: left;
+    margin: 8px 0 0 0;
+}
+
+.nav-user, .cs-nav-brand, .cs-user-toggle {
+    float: left;
+    cursor: pointer;
+}
+
+.nav-user a, .cs-nav-brand a {
+    position: relative;
+    border: none;
+    display: block;
+    color: ghostwhite;
+    text-align: center;
+    padding: 14px 16px;
+    font-size: 17px;
+    text-decoration: none;
+}
+
+.cs-top-dropdown{
+    display: none;
+    position: absolute;
+    background-color: rgba(40,40,40,0.8);
+    z-index: 1;
+}
+
+.cs-top-dropdown li {
+    width: 180px;
+}
+
+.cs-user-toggle a {
+    position: relative;
+    border: none;
+    display: block;
+    color: ghostwhite;
+    padding: 14px 16px;
+    font-size: 17px;
+    text-decoration: none;
+}
+
+.cs-user-toggle:hover ul.cs-top-dropdown {
+    display: block;
+}
+
+.cs-user-toggle a:hover, .nav-user:hover a, .cs-nav-brand:hover a {
+    background-color: #ddd;
+    color: #000;
+}
+
+/*small screen menu styles*/
+.open-slide {
+    display: none;
+    position: relative;
+    float: left;
+    padding: 14px;
+}
+
+.side-nav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    background-color: #111;
+    opacity: 0.9;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition:  0.5s;
+}
+
+.side-nav span {
+    padding: 10px 10px 10px 30px;
+    font-size: 40px;
+    color: ghostwhite;
+    display: block;
+    transition: 0.3s;
+}
+
+.side-nav a{
+    padding: 10px 10px 10px 30px;
+    text-decoration: none;
+    font-size: 22px;
+    color: ghostwhite;
+    display: block;
+    transition: 0.3s;
+}
+
+.side-nav a:hover{
+    color: #666;
+}
+
+.side-nav .cs-btn-close {
+    position: absolute;
+    top: 0;
+    right: 22px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.cs-default, .cs-user {
+    position: relative;
+    float: left;
+    width: 100%;
+}
+/*end small screen menu styles*/
+/*end top navbar*/
+
+.cs-btn {
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 10px;
+    margin: 4px;
+    padding: 6px;
+    border: none;
+    color: #ffffff;
+}
+
+.cs-btn-primary {
+    background: #0044ff;
+}
+
+.cs-btn-default {
+    background: #269abc;
+}
+
+.cs-btn-secondary {
+    background-color: #3c763d;
+}
+
+.cs-btn:hover{
+    background-color: #080808;
+    color: whitesmoke;
+}
+
+.cs-error {
+    display: none;
+    color: red;
+    font-weight: bold;
+}
+
+/*snackbar notification styles*/
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #000; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 99; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 20vh;
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+    visibility: visible; /* Show the snackbar */
+
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 20vh; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 20vh; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 20vh; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 20vh; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+/*end snackbar notification styles*/
+
+@media(max-width: 568px) {
+    .modal-content {
+        width: 100%;
+    }
+
+    .nav-user, a.cs-user, span.caret {
+        display: none;
+    }
+
+    .open-slide {
+        display: block;
+    }
+}
+
+@media(min-width: 570px) {
+
+    .open-slide, .user-enabled, a.cs-user {
+        display: none;
+    }
+}
