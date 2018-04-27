@@ -113,7 +113,7 @@ height: 140px;
 </div>
 
 <div class="topnav">
-  <a href="#">Classifieds</a>
+  <a href="../classifieds/classifieds_landing.php">Classifieds</a>
   <a href="gardenbox_landing.php">Box Logs</a>
   <?php if(!empty($manmem)){echo $manmem;} ?>
   <a href="userSettings.php">My Settings</a>

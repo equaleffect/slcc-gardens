@@ -12,6 +12,11 @@ function processAJAXCall($dbcxn){
 global $errmsg;
 $aviso = array();
 
+// branch for a delete inactives 
+if(!empty($_POST)){if(!empty($_POST['a'])){
+if($_POST['a'] == 8){
+  deleteInactiveUsers($dbcxn);}}}
+
 // validate row and field to validate
 $tf = validateEditParams($dbcxn);
 if(empty($tf)){exitWithJSONStr($errmsg, null, null, null, null);}
@@ -49,7 +54,7 @@ if(!is_numeric($_POST['a'])){
 if($_POST['a'] < 0){
   $errmsg[] = "Error 3. Edit user failed due to invalid change code.";
   return false;}
-elseif($_POST['a'] > 7){
+elseif($_POST['a'] > 8){
   $errmsg[] = "Error 4. Edit user failed due to invalid change code.";
   return false;}
 
@@ -324,4 +329,72 @@ $row['nv'] = $_POST['c'];
 return $row;
 }  // end fcn getExtendedValues
 
+
+function changePw($userid, $username, $email, $dbcxn, &$pwmsg){
+// make sure user has admin privs
+if($_SESSION['permrole'] != "Admin"){
+  $pwmsg = "Password was not changed. You do not have the required privileges.";
+  return false;}
+
+// make a new password
+$s = getRandomPassword();
+$t = preg_replace("/[^A-Za-z]/", "", $s);
+$u = strtoupper($t);
+$v = substr($u, 0, 10);
+$newpw = preg_replace("/[O01l]/", "x", $v);
+
+// salt and hash the new pw
+$pwhash = returnSaltedHash($newpw);
+
+// make password, username and email SQL-safe
+$un = $dbcxn->real_escape_string($username);
+$em = $dbcxn->real_escape_string($email);
+$pw = $dbcxn->real_escape_string($pwhash);
+
+// construct query
+$q = "UPDATE Users SET Password = '{$pw}', LastModifiedDate = NOW() " . 
+"WHERE UserKey = $userid AND UserName = '{$un}' AND Email = '{$em}' LIMIT 1";
+
+// run query
+$rs = $dbcxn->query($q);
+if(empty($rs)){
+  $dberr = $mysql->error;
+  $pwmsg = "Password was not changed due to a database error: {$dberr}.";
+  return false;}
+
+// check that exactly 1 row was affected
+$nr = $dbcxn->affected_rows;
+if($nr != 1){
+  $pwmsg = "Password was not changed due to a database error.  Affected rows: {$nr}.";
+  return false;}
+
+// return success
+$pwmsg = "The password for {$username} has been changed to:\n\n" . 
+"{$newpw}\n\nInform them by email at {$email}.";
+return true;
+}  // end fcn changePw
+
+
+function deleteInactiveUsers($dbcxn){
+// make sure admin is logged in
+if($_SESSION['permrole'] != "Admin"){
+  $err = "You do not have role-based permission to remove inactive users.";
+  exitWithJSONStr($err, null, null, null, null);}
+
+// format delete query
+$q = "DELETE FROM Users WHERE ArchivedDate IS NOT NULL";
+$rs = $dbcxn->query($q);
+if(empty($rs)){
+  $dberr = $dbcxn->error;
+  $s = "userEdits.php.deleteInactiveUsers Error: {$dberr}. Query: {$q}.";
+  error_log($s);
+  $err = "Users could not be deleted due to a database error.";
+  exitWithJSONStr($err, null, null, null, null);}
+
+// get the number of affected rows
+$nr = $dbcxn->affected_rows;
+if(empty($nr)){$nr = 0;}
+$nvp["deleteCount"] = $nr;
+  exitWithJSONStr(null, null, null, null, $nvp);
+}  // end fcn deleteInactiveUsers
 ?>

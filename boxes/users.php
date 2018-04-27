@@ -238,50 +238,6 @@ while($row = $rs->fetch_array()){
 $rv = implode("\n", $opt);
 return $rv;
 }  // end fcn getRoleList
-
-
-function changePw($userid, $username, $email, $dbcxn, &$pwmsg){
-// make sure user has admin privs
-if($_SESSION['permrole'] != "Admin"){
-  $pwmsg = "Password was not changed. You do not have the required privileges.";
-  return false;}
-
-// make a new password
-$s = getRandomPassword();
-$t = preg_replace("/[^A-Za-z2-9]/", "A", $s);
-$newpw = preg_replace("/[O01l]/", "x", $t);
-
-// salt and hash the new pw
-$salt = getRandomPassword();
-$pwhash = crypt($newpw, $nacl);
-
-// make password, username and email SQL-safe
-$un = $dbcxn->real_escape_string($username);
-$em = $dbcxn->real_escape_string($email);
-$pw = $dbcxn->real_escape_string($pwhash);
-
-// construct query
-$q = "UPDATE Users SET Password = '{$pw}', LastModifiedDate = NOW() " . 
-"WHERE UserKey = $userid AND UserName = '{$un}' AND Email = '{$em}' LIMIT 1";
-
-// run query
-$rs = $dbcxn->query($q);
-if(empty($rs)){
-  $dberr = $mysql->error;
-  $pwmsg = "Password was not changed due to a database error: {$dberr}.";
-  return false;}
-
-// check that exactly 1 row was affected
-$nr = $dbcxn->affected_rows;
-if($nr != 1){
-  $pwmsg = "Password was not changed due to a database error.  Affected rows: {$nr}.";
-  return false;}
-
-// return success
-$pwmsg = "The password for {$username} has been changed to:\n\n" . 
-"{$newpw}\n\nInform them by email at {$email}.";
-return true;
-}  // end fcn changePw
 ?>
 
 <!DOCTYPE html>
@@ -367,6 +323,8 @@ body {margin:0; padding:0; font-size:10pt; min-width:100%;}
 #role2 {background-color:#3d3d66;}
 #role3 {background-color:#945959;}
 #role4 {background-color:#666666;}
+
+#delinact {margin:1em; float:right;}
 
 /* messaging div */
 #messaging {font-weight:bold;}
@@ -457,6 +415,8 @@ height: 140px;
   <a href="userSettings.php">My Settings</a>
   <a href="https://www.slccgardens.com/">Main Site</a>
 </div>
+
+<a href="#" id="delinact">Delete inactives</a>
 
 <div class="content">
   <h2>Administrator User Management</h2>
@@ -573,6 +533,7 @@ assignEditCellHandlers();
 
 // others
 document.getElementById("addNewUser").onclick = addNewUser;
+document.getElementById("delinact").onclick = deleteInactives;
 }  // end fcn assignEventHandlers
 
 
@@ -1017,7 +978,7 @@ var rv = false;
 // returnText is populated from Census view (and a few augmented
 // elements)
 var t = xreq.responseText;
-// alert("This is responseText: " + t);
+// alert("XXX This is responseText: " + t);
 
 if(!t){
   alert("Error 18. The edit could not be completed because of " + 
@@ -1069,6 +1030,14 @@ else if(ro.note){
   t = "OK. The update was completed with the following " + 
   "notice(s):\n\n" + s;
   alert(t);}
+
+// check for a delete message
+else if(ro.deleteCount){
+  countInactiveUSERS(true);
+  tf = styleCell(td,false);
+  var num = (ro.deleteCount == 1) ? " account has" : "accounts have";
+  alert(ro.deleteCount + num + " been deleted.");
+  return;}
 
 // process return
 tf = updateUSERSArray(ro);
@@ -1355,6 +1324,61 @@ else {td.textContent = "Error";}
 if(R[1]){td.title = R[1];}
 else {td.title = "";}
 }  // end fcn splitDate
+
+
+function deleteInactives(e){
+var evt = e || window.event;
+if(e.preventDefault){e.preventDefault();}
+
+// confirm delete inactives
+var n = countInactiveUSERS(false);
+if(!n){
+  alert("There are no inactive users.");
+  return;}
+if(n == 1){
+  var rv = confirm("Delete 1 inactive user?\n\n" + 
+  "This cannot be undone.");}
+else {
+  var rv = confirm("Delete " + n + " inactive users?\n\n" + 
+  "This cannot be undone.");}
+if(!rv){return;}
+
+// send AJAX request
+var poststr = "a=8";
+sendAJAXEditRequest(this, poststr);
+}  // end fcn delete Inactives
+
+
+function countInactiveUSERS(tf){
+var n = 0;
+var m = 0;
+for(var i in USERS){
+if(USERS[i]['ArchivedDate']){
+  n++;
+  if(tf){USERS[i] = null;}}}
+if(!tf){return n;}
+
+// remove inactive table rows
+var T = document.getElementById("uta");
+var trnl = T.rows;
+var L = trnl.length;
+var k = L - 2;
+var tr = null;
+var uid = null;
+
+// scan table rows backwards, remove rows without USERS entry
+for(var i = k; i > 0; i--){
+  tr = trnl[i];
+  uid = tr.getAttribute("data-uid");
+  if(USERS[uid] == null){
+  if(tr.id != "newu"){
+    m++;
+    tr.parentNode.removeChild(tr);}}}
+
+// return number of rows removed
+return m;
+}  // end fcn countInactiveUSERS
+
 </script>
 </body>
 </html>
