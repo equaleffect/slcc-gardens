@@ -1,9 +1,12 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
 <html>
     <head>
         <title>SLCC Gardens Classifieds</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
-        <script src="../js/jquery-3.3.1.min.js" type="text/javascript"></script>
         <link href="../css/style.css" rel="stylesheet" type="text/css"/>
         <link href="../css/header.css" rel="stylesheet" type="text/css"/>
 
@@ -50,12 +53,7 @@
                 <input type="text" name="SearchDescription">
                 <input type="submit" value="Search" name="Search" style="margin-left: 25px">
             </form>
-            <br>          
-            <form style="color: white" action="create_bulletin.php">
-                <label>Create New Classifieds: </label>
-                <input type="submit" value="Create" name="Create" style="margin-left: 25px">
-            </form>
-
+            <br>
 
             <div id="BulletinSearch">
                 <?php
@@ -99,5 +97,8 @@ HTML;
                 ?>
             </div>
         </div>
+        <script src="../js/jquery-3.3.1.min.js" type="text/javascript"></script>
+        <script src="../js/header.js"></script>
+        <script src="../js/nav.js"></script>
     </body>
 </html>

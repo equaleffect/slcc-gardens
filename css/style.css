@@ -218,33 +218,6 @@ ul {
     width: 100%;
 }
 
-.btn {
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 10px;
-    margin: 4px;
-    padding: 6px;
-    border: none;
-    color: #ffffff;
-}
-
-.btn-primary {
-    background: #0044ff;
-}
-
-.btn-default {
-    background: #269abc;
-}
-
-.btn-secondary {
-    background-color: #3c763d;
-}
-
-.btn:hover{
-    background-color: #080808;
-    color: whitesmoke;
-}
-
 /* The Modal (background) */
 .modal {
     display: none;
@@ -306,6 +279,11 @@ ul {
     background-color: var(--container-bg-color);
     color: white;
     text-align: center;
+}
+
+form {
+    margin: 0;
+    padding: 0;
 }
 
 .modal-body {
