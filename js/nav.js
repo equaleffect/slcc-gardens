@@ -86,11 +86,11 @@ $(document).ready(function () {
     //session variables
     const AUTH_URL = "common/SLCCGAuthenticate.php";
     const REG_URL = "boxes/addUser.php";
-    const username = document.querySelector('#username');
-    const password = document.querySelector('#password');
-    const registerModal = document.querySelector('#register-modal');
-    const loginModal = document.querySelector('#login-modal');
-    const loginError = document.querySelector('#cs-login-error');
+    const username = $('#username');
+    const password = $('#password');
+    const registerModal = $('#register-modal');
+    const loginModal = $('#login-modal');
+    const loginError = $('#cs-login-error');
 
     // login form submission handler
     loginModal.onsubmit = e => {
@@ -149,7 +149,7 @@ $(document).ready(function () {
             xhr.send(params);
         } else {
             // when either login field isn't filled out display the error element
-            loginError.innerHTML = 'All fields are required!';
+            loginError.html('All fields are required!');
             loginError.show();
         }// end validation
     };// end login form submission handler
